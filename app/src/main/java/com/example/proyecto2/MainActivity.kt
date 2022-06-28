@@ -29,15 +29,17 @@ class MainActivity : ComponentActivity() {
         val animalViewModel = ViewModelProvider(this).get(AnimalViewModel::class.java)
         val pageAnimalviewmodel = ViewModelProvider(this).get(PageAnimalVM::class.java)
         setContent {
-            Proyecto2Theme {
+            /*Proyecto2Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Body(animalViewModel,pageAnimalviewmodel)
+
                 }
-            }
+
+            }*/
+            Body(animalViewModel,pageAnimalviewmodel)
         }
     }
 }
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
 fun Body(animalViewModel: AnimalViewModel, pageAnimalviewmodel: PageAnimalVM) {
 
     val navController = rememberNavController() // Redirección de vistas
-
+/*
     //BOTTOM NAVIGATION
     val navigationItems = listOf(
         AppScreens.AnimalScreen,
@@ -60,10 +62,10 @@ fun Body(animalViewModel: AnimalViewModel, pageAnimalviewmodel: PageAnimalVM) {
     ) { innerPadding ->
         // Apply the padding globally to the whole BottomNavScreensController
         Surface(modifier = Modifier.padding(innerPadding)) {
-            AppNavigation(navController,animalViewModel,pageAnimalviewmodel)
-        }
-    }
 
+        }
+    }*/
+    AppNavigation(navController,animalViewModel,pageAnimalviewmodel)
 }
 @Composable
 fun Greeting(name: String) {

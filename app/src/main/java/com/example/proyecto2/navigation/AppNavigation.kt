@@ -10,6 +10,7 @@ import com.example.proyecto2.data.animal.pagination.PageAnimalVM
 import com.example.proyecto2.screens.AnimalEditScreen
 import com.example.proyecto2.screens.AnimalScreen
 import com.example.proyecto2.screens.ConfigScreen
+import com.example.proyecto2.screens.LoginScreen
 
 @Composable
 fun AppNavigation(
@@ -19,7 +20,13 @@ fun AppNavigation(
 
     ) {
     //val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.AnimalScreen.route) {
+    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
+        composable(
+            route = AppScreens.LoginScreen.route
+        ) {
+            LoginScreen(navController)
+        }
+
         composable(
             route = AppScreens.AnimalScreen.route
         ) {

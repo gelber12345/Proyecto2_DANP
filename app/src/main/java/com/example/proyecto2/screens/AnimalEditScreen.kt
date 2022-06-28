@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalViewModel
 import com.example.proyecto2.navigation.AppScreens
+import com.example.proyecto2.screens.components.CustomTextField
 
 
 @Composable
@@ -109,26 +110,4 @@ fun AnimalEditScreen(navController: NavController, animal: Animal, viewModel: An
             }
         }
     }
-}
-@Composable
-fun CustomTextField(
-    title: String,
-    textState: String,
-    onTextChange: (String) -> Unit,
-    keyboardType: KeyboardType
-) {
-    OutlinedTextField(
-        value = textState,
-        onValueChange = { onTextChange(it) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
-        ),
-        singleLine = true,
-        label = { Text(title) },
-        modifier = Modifier.padding(10.dp),
-        textStyle = TextStyle(
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp
-        )
-    )
 }
