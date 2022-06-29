@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -75,7 +76,7 @@ fun FirstMainScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize().background(Color(255, 237, 233))
     ) {
         //////////////
 
@@ -140,8 +141,9 @@ fun FirstMainScreen(
                 }) {
                 Column() {
                     Icon(
-                        Icons.Filled.Home,
-                        contentDescription = "GATOS"
+                        painterResource(id = R.drawable.gato),
+                        contentDescription = "GATOS",
+                        modifier = Modifier.height(30.dp).width(30.dp)
                     )
                     Text("GATOS",fontSize = textSize.toInt().sp)
                 }
@@ -170,9 +172,7 @@ fun FirstMainScreen(
         ) {
 
 
-            item {
-                TitleRow(head1 = "Id", head2 = "Nombre", head3 = "Raza")
-            }
+
             if ( searching ){
                 items(searchResults) { centro ->
                     AnimalRow(centro, navController, viewModel)
@@ -190,36 +190,11 @@ fun FirstMainScreen(
         }
     }
 }
-
-@Composable
-fun TitleRow(head1: String, head2: String, head3: String) {
-    Row(
-        modifier = Modifier
-            .background(MaterialTheme.colors.primary)
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        Text(
-            head1, color = Color.White,
-            modifier = Modifier
-                .weight(0.1f)
-        )
-        Text(
-            head2, color = Color.White,
-            modifier = Modifier
-                .weight(0.2f)
-        )
-        Text(
-            head3, color = Color.White,
-            modifier = Modifier.weight(0.2f)
-        )
-    }
-}
-
 @Composable
 fun AnimalRow(animal: Animal, navController: NavController, viewModel: AnimalViewModel) {
-    Card(elevation = 20.dp,
-        shape= RoundedCornerShape(20.dp),) {
+    Card(
+        shape= RoundedCornerShape(30.dp),
+        backgroundColor = Color(245, 223, 219)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth().height(120.dp)
@@ -247,7 +222,7 @@ fun AnimalRow(animal: Animal, navController: NavController, viewModel: AnimalVie
              )
 
             Column() {
-                Text(animal.nombre, modifier = Modifier.weight(0.2f), color = Color.Black)
+                Text(animal.nombre, modifier = Modifier.weight(0.2f))
                 Text(animal.raza, modifier = Modifier.weight(0.2f))
                 Text(animal.edad.toString(), modifier = Modifier.weight(0.2f))
             }
