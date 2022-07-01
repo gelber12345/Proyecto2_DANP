@@ -1,16 +1,24 @@
 package com.example.proyecto2.screens
 
+import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -28,53 +36,99 @@ fun LoginScreen(navController: NavHostController) {
     val onPasswordChange = { text: String ->
         password = text
     }
-    Box(Modifier.fillMaxSize(),
-           contentAlignment = Alignment.Center,
-           ) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color(247, 149, 128))
-            .verticalScroll(rememberScrollState()),
+
+    Box(
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color(18, 114, 163))
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
 
-           ) {
+            ) {
             Spacer(Modifier.height(40.0.dp))
-            Text(text = "Responsible pet adoption", fontSize = 20.sp, color = Color.White )
-            Spacer(Modifier.height(30.0.dp))
-            Text(text = "ADOPT.ME" , fontSize =70.sp , color = Color.White)
-            Spacer(Modifier.height(100.0.dp))
+            Text(
+                text = "Adopt.me",
+                fontSize = 72.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = "Adopción responsable de mascotas",
+                fontSize = 16.sp,
+                color = Color(208, 227, 237)
+            )
+
+            Spacer(Modifier.height(48.dp))
 
             Card(
-                modifier = Modifier.fillMaxWidth()
-
-                    .background(Color(247, 149, 128)),
-                elevation = 20.dp,
-                shape= RoundedCornerShape(20.dp),
-                contentColor = Color(247, 149, 128))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+                    .background(Color(18, 114, 163)),
+                shape = RoundedCornerShape(24.dp)
+            )
             {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,) {
-
-
-                    CustomTextField(
-                        title = "E-MAIL ",
-                        textState = email,
-                        onTextChange = onEmailChange,
-                        keyboardType = KeyboardType.Text
-                    )
-                    Spacer(Modifier.height(20.0.dp))
-                    CustomTextField(
-                        title = "Contraseña ",
-                        textState = password,
-                        onTextChange = onPasswordChange,
-                        keyboardType = KeyboardType.Password
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Bienvenido",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(18.dp)
                     )
 
-                    Spacer(Modifier.height(20.0.dp))
-                    Button(onClick = { navController.navigate(AppScreens.AnimalScreen.route) }) {
-                        Text(text = "INICIAR SESION")
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Correo Electrónico") },
+                        placeholder = { Text(text = "Ingrese su correo electrónico") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Email,
+                                contentDescription = "emailIcon"
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("Contraseña") },
+                        placeholder = { Text(text = "Ingrese su contraseña") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "passwordIcon"
+                            )
+                        },
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+
+                    Spacer(Modifier.height(24.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate(AppScreens.AnimalScreen.route)
+                        },
+                        shape = RoundedCornerShape(20.dp),
+                        elevation = ButtonDefaults.elevation(5.dp)
+                    ) {
+                        Text(
+                            text = "Iniciar Sesión",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
                     }
-                    Spacer(Modifier.height(80.0.dp))
+                    Spacer(Modifier.height(24.dp))
                 }
             }
         }
