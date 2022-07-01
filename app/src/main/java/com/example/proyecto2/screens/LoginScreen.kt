@@ -1,7 +1,7 @@
 package com.example.proyecto2.screens
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto2.navigation.AppScreens
-import com.example.proyecto2.screens.components.CustomTextField
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -50,14 +48,18 @@ fun LoginScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
+
             Spacer(Modifier.height(40.0.dp))
+
             Text(
                 text = "Adopt.me",
                 fontSize = 72.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
+
             Spacer(Modifier.height(4.dp))
+
             Text(
                 text = "Adopción responsable de mascotas",
                 fontSize = 16.sp,
@@ -120,7 +122,17 @@ fun LoginScreen(navController: NavHostController) {
                             navController.navigate(AppScreens.AnimalScreen.route)
                         },
                         shape = RoundedCornerShape(20.dp),
-                        elevation = ButtonDefaults.elevation(5.dp)
+                        elevation = ButtonDefaults.elevation(5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp
+                            ),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = Color.White,
+                            backgroundColor = Color(18, 114, 163)
+                        )
                     ) {
                         Text(
                             text = "Iniciar Sesión",
@@ -128,7 +140,24 @@ fun LoginScreen(navController: NavHostController) {
                             fontSize = 16.sp
                         )
                     }
-                    Spacer(Modifier.height(24.dp))
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Row {
+                        Text(
+                            text = "¿Nuevo en Adopt.me?", Modifier.padding(end = 8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Crear una cuenta", fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                navController.navigate(AppScreens.RegisterScreen.route)
+                            },
+                            color = Color(18, 114, 163)
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
