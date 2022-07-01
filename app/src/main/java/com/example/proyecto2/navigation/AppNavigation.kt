@@ -7,10 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalViewModel
 import com.example.proyecto2.data.animal.pagination.PageAnimalVM
-import com.example.proyecto2.screens.AnimalEditScreen
-import com.example.proyecto2.screens.AnimalScreen
-import com.example.proyecto2.screens.ConfigScreen
-import com.example.proyecto2.screens.LoginScreen
+import com.example.proyecto2.screens.*
 
 @Composable
 fun AppNavigation(
@@ -28,10 +25,17 @@ fun AppNavigation(
         }
 
         composable(
+            route = AppScreens.RegisterScreen.route
+        ) {
+            RegisterScreen(navController)
+        }
+
+        composable(
             route = AppScreens.AnimalScreen.route
         ) {
-            AnimalScreen(navController, viewModelAnimal,pageAnimalviewmodel)
+            AnimalScreen(navController, viewModelAnimal, pageAnimalviewmodel)
         }
+
         composable(
             route = AppScreens.EditAnimalScreen.route,
         ) {
