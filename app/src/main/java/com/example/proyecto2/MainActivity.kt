@@ -39,10 +39,11 @@ class MainActivity : ComponentActivity() {
                 }
 
             }*/
-            Body(animalViewModel,pageAnimalviewmodel)
+            Body(animalViewModel, pageAnimalviewmodel)
         }
     }
 }
+
 @Composable
 fun Body(animalViewModel: AnimalViewModel, pageAnimalviewmodel: PageAnimalVM) {
 
@@ -67,6 +68,7 @@ fun Body(animalViewModel: AnimalViewModel, pageAnimalviewmodel: PageAnimalVM) {
     }*/
     AppNavigation(navController,animalViewModel,pageAnimalviewmodel)
 }
+
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
