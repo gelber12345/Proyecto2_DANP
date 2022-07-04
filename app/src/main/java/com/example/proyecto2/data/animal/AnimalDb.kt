@@ -5,11 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-
 @Database(entities = [Animal::class], version = 2)
 
 abstract class AnimalDb : RoomDatabase() {
-
     abstract fun animalDao(): AnimalDao
 
     companion object {
@@ -18,13 +16,15 @@ abstract class AnimalDb : RoomDatabase() {
 
         fun getDatabase(context: Context): AnimalDb {
             val tempInstance = INSTANCE
+
             if (tempInstance != null) {
                 return tempInstance
             }
+
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AnimalDb::class.java, "animal"
+                    AnimalDb::class.java, "animals"
                 )
                     .build()
                 INSTANCE = instance

@@ -3,8 +3,8 @@ package com.example.proyecto2.data.animal
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class AnimalRepository(application: Application) {
     var animalDao: AnimalDao
@@ -16,33 +16,34 @@ class AnimalRepository(application: Application) {
         animalDao = database.animalDao()
     }
 
-    val readAllAnimal: LiveData<List<Animal>> = animalDao.getAllDataAnimal()
+    val readAllDataAnimal: LiveData<List<Animal>> = animalDao.getAllDataAnimal()
 
 
     suspend fun insertAnimal(animal: Animal) {
         animalDao.insertAnimal(animal)
     }
 
-    suspend fun updateAnimal(centro: Animal) {
-        animalDao.updateAnimal(centro)
-    }
-
-    suspend fun deleteAnimalById(id: Int) {
-        animalDao.deleteAnimalById(id)
-    }
-
+    //
+//    suspend fun updateAnimal(centro: Animal) {
+//        animalDao.updateAnimal(centro)
+//    }
+//
+//    suspend fun deleteAnimalById(id: Int) {
+//        animalDao.deleteAnimalById(id)
+//    }
+//
     suspend fun deleteAllAnimal() {
         animalDao.deleteAllAnimal()
     }
-
-    fun findAnimal(text: String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            searchResults.value = asyncFind(text).await()
-        }
-    }
-
-    private fun asyncFind(name: String): Deferred<List<Animal>?> =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async animalDao.findAnimal(name)
-        }
+////
+//    fun findAnimal(text: String) {
+//        coroutineScope.launch(Dispatchers.Main) {
+//            searchResults.value = asyncFind(text).await()
+//        }
+//    }
+//
+//    private fun asyncFind(name: String): Deferred<List<Animal>?> =
+//        coroutineScope.async(Dispatchers.IO) {
+//            return@async animalDao.findAnimal(name)
+//        }
 }

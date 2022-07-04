@@ -15,54 +15,48 @@ import kotlinx.coroutines.launch
 
 class AnimalViewModel(appObj: Application) : AndroidViewModel(appObj) {
 
-    private val centroRepository: AnimalRepository = AnimalRepository(appObj)
+    private val animalRepository: AnimalRepository = AnimalRepository(appObj)
+    val searchResults: MutableLiveData<List<Animal>> = animalRepository.searchResults
+    val animalFlow = fetchAnimalData()
 
-    val searchResults: MutableLiveData<List<Animal>> = centroRepository.searchResults
-
-
-    val animalFlow = fetchBloodData()
-
-    fun fetchBloodData(): Flow<PagingData<Animal>> {
-        val repo = PageAnimalService(totalCount = 99, pageSize = 5,centroRepository.animalDao )
+    fun fetchAnimalData(): Flow<PagingData<Animal>> {
+        val repo = PageAnimalService(totalCount = 99, pageSize = 5, animalRepository.animalDao)
         return Pager(PagingConfig(pageSize = repo.pageSize)) {
             PageAnimalSource(repo)
         }.flow
     }
 
     fun fetchAllAnimal(): LiveData<List<Animal>> {
-        return centroRepository.readAllAnimal
+        return animalRepository.readAllDataAnimal
     }
 
     fun insertAnimal(animal: Animal) {
         viewModelScope.launch {
-            centroRepository.insertAnimal( animal)
-        }
-
-    }
-
-    fun findAnimal(text: String) {
-        viewModelScope.launch {
-            centroRepository.findAnimal(text)
-        }
-
-    }
-
-    fun updateAnimal(animal: Animal) {
-        viewModelScope.launch {
-            centroRepository.updateAnimal(animal)
-        }
-
-    }
-
-    fun deleteAnimalById(id: Int) {
-        viewModelScope.launch {
-            centroRepository.deleteAnimalById(id)
+            animalRepository.insertAnimal(animal)
         }
     }
 
+//    fun findAnimal(text: String) {
+//        viewModelScope.launch {
+//            animalRepository.findAnimal(text)
+//        }
+//    }
+//
+//    fun updateAnimal(animal: Animal) {
+//        viewModelScope.launch {
+//            animalRepository.updateAnimal(animal)
+//        }
+//    }
+//
+//    fun deleteAnimalById(id: Int) {
+//        viewModelScope.launch {
+//            animalRepository.deleteAnimalById(id)
+//        }
+//    }
+//
     fun deleteAllAnimal() {
         viewModelScope.launch {
-            centroRepository.deleteAllAnimal()
+            animalRepository.deleteAllAnimal()
         }
     }
 

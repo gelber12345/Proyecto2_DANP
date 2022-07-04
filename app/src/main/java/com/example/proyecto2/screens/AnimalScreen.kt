@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -33,22 +32,19 @@ import com.example.proyecto2.R
 import com.example.proyecto2.data.Data
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalViewModel
-import com.example.proyecto2.data.animal.pagination.PageAnimalVM
 import com.example.proyecto2.navigation.AppScreens
 
 @Composable
 fun AnimalScreen(
     navController: NavController,
-    viewModel: AnimalViewModel,
-    pageAnimalviewmodel: PageAnimalVM
+    viewModel: AnimalViewModel
 ) {
-
-    val allCentros: LazyPagingItems<Animal> = viewModel.animalFlow.collectAsLazyPagingItems()
+    val allAnimals: LazyPagingItems<Animal> = viewModel.animalFlow.collectAsLazyPagingItems()
     //val allCentros = pageAnimalviewmodel.animalFlow.collectAsLazyPagingItems()
     val searchResults by viewModel.searchResults.observeAsState(listOf())
 
     FirstMainScreen(
-        allCentros = allCentros,
+        allAnimals = allAnimals,
         searchResults = searchResults,
         viewModel = viewModel,
         navController = navController
@@ -57,7 +53,7 @@ fun AnimalScreen(
 
 @Composable
 fun FirstMainScreen(
-    allCentros: LazyPagingItems<Animal>,
+    allAnimals: LazyPagingItems<Animal>,
     searchResults: List<Animal>,
     viewModel: AnimalViewModel,
     navController: NavController
@@ -119,7 +115,6 @@ fun FirstMainScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        //////////////
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
@@ -131,9 +126,9 @@ fun FirstMainScreen(
                     backgroundColor = Color(246, 246, 246),
                 ),
                 onClick = {
-                    searching = true
-                    filter = "gato"
-                    viewModel.findAnimal("%$filter%")
+//                    searching = true
+//                    filter = "gato"
+//                    viewModel.findAnimal("%$filter%")
                     //navController.navigate(AppScreens.EditAnimalScreen.route)
                     //navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
                 },
@@ -160,9 +155,9 @@ fun FirstMainScreen(
                     backgroundColor = Color(246, 246, 246),
                 ),
                 onClick = {
-                    searching = true
-                    filter = "perro"
-                    viewModel.findAnimal("%$filter%")
+//                    searching = true
+//                    filter = "perro"
+//                    viewModel.findAnimal("%$filter%")
                     //navController.navigate(AppScreens.EditAnimalScreen.route)
                     //navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
                 },
@@ -212,74 +207,19 @@ fun FirstMainScreen(
                     Text("Aves", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
-
-            Button(
-                colors = buttonColors(
-                    backgroundColor = Color(246, 246, 246),
-                ),
-                onClick = {
-                    searching = false
-                    //filter = "otros"
-                    //viewModel.findAnimal("%$filter%")
-                    navController.navigate(AppScreens.EditAnimalScreen.route)
-                    navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
-                },
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.padding(4.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        painterResource(id = R.drawable.other),
-                        contentDescription = "Otros",
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(40.dp),
-                        tint = Color.Unspecified
-                    )
-                    Text("Otros", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                }
-            }
         }
 
-        Button(
-            onClick = {
-                searching = true
-                viewModel.findAnimal("%$textSearch%")
-            }) {
-
-            Text("BUSCAR")
-        }
-        Button(onClick = {
-            searching = false
-
-        }) {
-            Text("TODO")
-        }
-
-        //////////////
         LazyColumn(
             Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-
-
-            if (searching) {
-                items(searchResults) { centro ->
-                    AnimalRow(centro, navController, viewModel)
+            items(allAnimals) { animal ->
+                animal?.let {
+                    AnimalRow(animal, navController, viewModel)
                     Spacer(Modifier.height(10.0.dp))
                 }
-            } else {
-                items(allCentros) { centro ->
-                    centro?.let {
-                        AnimalRow(it, navController, viewModel)
-                        Spacer(Modifier.height(10.0.dp))
-                    }
-                }
             }
-
         }
     }
 }
@@ -289,42 +229,84 @@ fun AnimalRow(animal: Animal, navController: NavController, viewModel: AnimalVie
     Card(
         shape = RoundedCornerShape(15.dp),
         backgroundColor = Color(240, 240, 240),
-        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp),
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
         elevation = 5.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+//                .height(120.dp)
                 .clickable {
                     navController.currentBackStackEntry?.savedStateHandle?.set("animal", animal)
                     navController.navigate(AppScreens.EditAnimalScreen.route)
                 }
         ) {
+            val pathImg: Any
+
+            if (animal.type == "Dog") {
+                pathImg = R.drawable.dog_default
+            } else if (animal.type == "Cat") {
+                pathImg = R.drawable.cat_default
+            } else {
+                pathImg = R.drawable.bird_default
+            }
 
             val painter = rememberImagePainter(
-                data = "https://picsum.photos/id/237/200/300",
+                data = animal.photo,
                 builder = {
-                    placeholder(R.drawable.ic_launcher_background)
-                    // transition when placeholder -> image
+                    placeholder(pathImg)
                     crossfade(true)
-                    error(R.drawable.ic_launcher_foreground)
+                    error(pathImg)
                 }
             )
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(48.dp))
-                    .padding(top = 5.dp, bottom = 5.dp)
-            )
 
-            Column() {
-                Text(animal.nombre, modifier = Modifier.weight(0.2f))
-                Text(animal.raza, modifier = Modifier.weight(0.2f))
-                Text(animal.edad.toString(), modifier = Modifier.weight(0.2f))
+            Row(
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .padding(5.dp),
+                )
+
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    animal.name?.let {
+                        Text(it, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    }
+
+                    Row() {
+                        Text("Type: ", fontWeight = FontWeight.Bold)
+                        animal.type?.let { Text(it) }
+                    }
+
+                    Row() {
+                        Text("Specie: ", fontWeight = FontWeight.Bold)
+                        animal.specie?.let { Text(it) }
+                    }
+
+                    Row() {
+                        Text("Age: ", fontWeight = FontWeight.Bold)
+                        animal.age?.let { Text(it) }
+                    }
+
+                    Row() {
+                        Text("Gender: ", fontWeight = FontWeight.Bold)
+                        animal.gender?.let { Text(it) }
+                    }
+
+                    Row() {
+                        Text("Size: ", fontWeight = FontWeight.Bold)
+                        animal.size?.let { Text(it) }
+                    }
+                }
             }
         }
     }
-
 }

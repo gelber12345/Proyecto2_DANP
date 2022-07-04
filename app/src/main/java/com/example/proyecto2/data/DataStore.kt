@@ -11,7 +11,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
 class Data(private val context: Context) {
 
     // to make sure there's only one instance
@@ -29,12 +28,14 @@ class Data(private val context: Context) {
             // No type safety.
             preferences[USER_TEXTSIZE_KEY] ?: 12
         }
+
     //save Size into datastore
     suspend fun saveSize(data: Int) {
         context.dataStore.edit { preferences ->
             preferences[USER_TEXTSIZE_KEY] = data
         }
     }
+
     //get the saved Duracion
     val getColor: Flow<Int?> = context.dataStore.data
         .map { preferences ->

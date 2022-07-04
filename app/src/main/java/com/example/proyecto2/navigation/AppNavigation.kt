@@ -6,15 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalViewModel
-import com.example.proyecto2.data.animal.pagination.PageAnimalVM
 import com.example.proyecto2.screens.*
 
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    viewModelAnimal: AnimalViewModel,
-    pageAnimalviewmodel: PageAnimalVM,
-
+    viewModelAnimal: AnimalViewModel
     ) {
     //val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
@@ -33,7 +30,7 @@ fun AppNavigation(
         composable(
             route = AppScreens.AnimalScreen.route
         ) {
-            AnimalScreen(navController, viewModelAnimal, pageAnimalviewmodel)
+            AnimalScreen(navController, viewModelAnimal)
         }
 
         composable(
@@ -45,7 +42,11 @@ fun AppNavigation(
             if (result != null) {
                 AnimalEditScreen(navController, result, viewModelAnimal)
             } else {
-                AnimalEditScreen(navController, Animal(0, "", "", 0), viewModelAnimal)
+                AnimalEditScreen(
+                    navController,
+                    Animal(0, "", "", "", "", "", "", "", "", "", "", ""),
+                    viewModelAnimal
+                )
             }
         }
 
