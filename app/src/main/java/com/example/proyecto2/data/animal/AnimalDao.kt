@@ -14,13 +14,22 @@ interface AnimalDao {
     @Query("SELECT * FROM animals WHERE type = :type")
     fun getAllDataAnimalByType(type: String): LiveData<List<Animal>>
 
-//    @Query(
-//        "SELECT * FROM animal WHERE Nombre LIKE :search " +
-//                "or Raza LIKE :search " +
-//                "or Edad LIKE :search "
-//
-//    )
-//    fun findAnimal(search: String): List<Animal>
+   @Query(
+       "SELECT * FROM animals WHERE type LIKE :search " +
+               "or age LIKE :search " +
+               "or size LIKE :search " +
+               "or name LIKE :search " +
+               "or status LIKE :search " +
+               "or country LIKE :search " +
+               "or gender LIKE :search "
+
+    )
+    fun findAnimal(search: String): List<Animal>
+
+    @Query(
+        "SELECT * FROM animals WHERE specie LIKE :search "
+    )
+    fun findAnimalbBySpecie(search: String): List<Animal>
 //
     @Query("SELECT * FROM animals WHERE id = :id")
     suspend fun findOneAnimal(id: Int): Animal

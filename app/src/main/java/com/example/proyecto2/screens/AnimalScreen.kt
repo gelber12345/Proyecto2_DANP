@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -33,6 +34,7 @@ import com.example.proyecto2.data.Data
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalViewModel
 import com.example.proyecto2.navigation.AppScreens
+import kotlinx.coroutines.launch
 
 @Composable
 fun AnimalScreen(
@@ -42,6 +44,8 @@ fun AnimalScreen(
     val allAnimals: LazyPagingItems<Animal> = viewModel.animalFlow.collectAsLazyPagingItems()
     //val allCentros = pageAnimalviewmodel.animalFlow.collectAsLazyPagingItems()
     val searchResults by viewModel.searchResults.observeAsState(listOf())
+
+
 
     FirstMainScreen(
         allAnimals = allAnimals,
@@ -58,34 +62,29 @@ fun FirstMainScreen(
     viewModel: AnimalViewModel,
     navController: NavController
 ) {
-    var textSize by rememberSaveable { mutableStateOf("0") }
-    var color by rememberSaveable { mutableStateOf("0") }
+    var busqueda by rememberSaveable{ mutableStateOf("") }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val dataStore = Data(context)
+
+
+    LaunchedEffect(scope) {
+        dataStore.getSearch.collect { data ->
+            busqueda = data
+        }
+    }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        LaunchedEffect(scope) {
-            dataStore.getColor.collect { data ->
-                color = data.toString()
-            }
-        }
-        LaunchedEffect(scope) {
-            dataStore.getSize.collect { data ->
-                textSize = data.toString()
-            }
-        }
 
-        var textSearch by remember { mutableStateOf("") }
+
         var searching by remember { mutableStateOf(false) }
         var filter by remember { mutableStateOf("") }
-        val onTextChange = { text: String ->
-            textSearch = text
-        }
+
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -95,23 +94,59 @@ fun FirstMainScreen(
             fontWeight = FontWeight.Bold
         )
 
-        OutlinedTextField(
-            value = textSearch,
-            onValueChange = { textSearch = it },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            ),
-            label = { Text("Buscar") },
-            shape = RoundedCornerShape(32.dp),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "searchIcon"
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-            maxLines = 1
-        )
+        Row() {
+            OutlinedTextField(
+                value = busqueda,
+                onValueChange = { busqueda = it },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                label = { Text("Buscar") },
+                shape = RoundedCornerShape(32.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "searchIcon"
+                    )
+                },
+                modifier = Modifier.fillMaxWidth().weight(2f),
+                maxLines = 1
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+            Button(
+                colors = buttonColors(
+                    backgroundColor = Color(246, 246, 246),
+                ),
+                onClick = {
+                    searching = true
+                    filter = "All"
+                    viewModel.findAnimal("%$busqueda%")
+
+                    scope.launch {
+                        dataStore.saveSearch(busqueda)
+                    }
+
+                },
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.padding(4.dp).weight(1f)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "searchIcon",
+                        modifier = Modifier
+                                .height(40.dp)
+                            .width(40.dp),
+                        tint = Color.Unspecified
+                    )
+                }
+            }
+
+        }
+
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -126,9 +161,9 @@ fun FirstMainScreen(
                     backgroundColor = Color(246, 246, 246),
                 ),
                 onClick = {
-//                    searching = true
-//                    filter = "gato"
-//                    viewModel.findAnimal("%$filter%")
+                    searching = true
+                    filter = "Cat"
+                    viewModel.findAnimalBySpecie("%$filter%")
                     //navController.navigate(AppScreens.EditAnimalScreen.route)
                     //navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
                 },
@@ -155,11 +190,9 @@ fun FirstMainScreen(
                     backgroundColor = Color(246, 246, 246),
                 ),
                 onClick = {
-//                    searching = true
-//                    filter = "perro"
-//                    viewModel.findAnimal("%$filter%")
-                    //navController.navigate(AppScreens.EditAnimalScreen.route)
-                    //navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
+                    searching = true
+                    filter = "Dog"
+                    viewModel.findAnimalBySpecie("%$filter%")
                 },
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.padding(4.dp)
@@ -184,11 +217,10 @@ fun FirstMainScreen(
                     backgroundColor = Color(246, 246, 246),
                 ),
                 onClick = {
-                    searching = false
-//                    filter = "ave"
-//                    viewModel.findAnimal("%$filter%")
-                    navController.navigate(AppScreens.ViewDetailsAnimalScreen.route)
-                    navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
+                    searching = true
+                    filter = "Bird"
+                    viewModel.findAnimalBySpecie("%$filter%")
+
                 },
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.padding(4.dp)
@@ -214,10 +246,6 @@ fun FirstMainScreen(
                 ),
                 onClick = {
                     searching = false
-//                    filter = "ave"
-//                    viewModel.findAnimal("%$filter%")
-//                    navController.navigate(AppScreens.ViewDetailsAnimalScreen.route)
-//                    navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
                 },
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.padding(4.dp)
@@ -243,18 +271,31 @@ fun FirstMainScreen(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            items(allAnimals) { animal ->
-                animal?.let {
-                    AnimalRow(animal, navController, viewModel)
-                    Spacer(Modifier.height(10.0.dp))
+
+            if (searching && filter!=""){
+
+                items(searchResults) { animal ->
+                    animal.let {
+                        AnimalRow(animal, navController)
+                        Spacer(Modifier.height(10.0.dp))
+                    }
+                }
+            }else{
+                items(allAnimals) { animal ->
+                    animal?.let {
+                        AnimalRow(animal, navController)
+                        Spacer(Modifier.height(10.0.dp))
+                    }
                 }
             }
+
+
         }
     }
 }
 
 @Composable
-fun AnimalRow(animal: Animal, navController: NavController, viewModel: AnimalViewModel) {
+fun AnimalRow(animal: Animal, navController: NavController) {
     Card(
         shape = RoundedCornerShape(15.dp),
         backgroundColor = Color(240, 240, 240),

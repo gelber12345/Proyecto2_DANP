@@ -12,29 +12,52 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.proyecto2.data.Data
 import com.example.proyecto2.navigation.AppScreens
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var textSize by rememberSaveable { mutableStateOf("0") }
+    var color by rememberSaveable{ mutableStateOf("0") }
 
-    val onEmailChange = { text: String ->
-        email = text
-    }
-    val onPasswordChange = { text: String ->
-        password = text
-    }
 
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val dataStore = Data(context)
+
+    LaunchedEffect(scope) {
+        dataStore.getEmail.collect { data ->
+            email = data
+        }
+    }
+    LaunchedEffect(scope) {
+        dataStore.getPassword.collect { data ->
+            password = data
+        }
+    }
+    LaunchedEffect(scope) {
+        dataStore.getSize.collect { data ->
+            textSize = data.toString()
+        }
+    }
+    LaunchedEffect(scope) {
+        dataStore.getColor.collect { data ->
+            color = data.toString()
+        }
+    }
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -42,7 +65,7 @@ fun LoginScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(18, 114, 163))
+                .background(color = Color(color.toInt()))
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,7 +95,7 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp)
-                    .background(Color(18, 114, 163)),
+                    .background(Color(color.toInt())),
                 shape = RoundedCornerShape(24.dp)
             )
             {
@@ -86,9 +109,10 @@ fun LoginScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = email,
+
                         onValueChange = { email = it },
                         label = { Text("Correo Electrónico") },
-                        placeholder = { Text(text = "Ingrese su correo electrónico") },
+                        placeholder = { Text(text = "Ingrese su correo electrónico",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -104,7 +128,7 @@ fun LoginScreen(navController: NavHostController) {
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Contraseña") },
-                        placeholder = { Text(text = "Ingrese su contraseña") },
+                        placeholder = { Text(text = "Ingrese su contraseña",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -131,13 +155,13 @@ fun LoginScreen(navController: NavHostController) {
                             ),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.White,
-                            backgroundColor = Color(18, 114, 163)
+                            backgroundColor =Color(color.toInt())
                         )
                     ) {
                         Text(
                             text = "Iniciar Sesión",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = textSize.toInt().sp
                         )
                     }
 
@@ -153,11 +177,21 @@ fun LoginScreen(navController: NavHostController) {
                             modifier = Modifier.clickable {
                                 navController.navigate(AppScreens.RegisterScreen.route)
                             },
-                            color = Color(18, 114, 163)
+                            color = Color(color.toInt())
                         )
                     }
 
                     Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        text = "Configuraciones", fontWeight = FontWeight.Bold,fontSize = textSize.toInt().sp,
+                        modifier = Modifier.clickable {
+                            navController.navigate(AppScreens.ConfigScreen.route)
+                        },
+                        color = Color(color.toInt())
+                    )
+                    Spacer(Modifier.height(16.dp))
+
                 }
             }
         }

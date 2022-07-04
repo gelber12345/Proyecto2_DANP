@@ -14,20 +14,29 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.proyecto2.data.Data
 import com.example.proyecto2.navigation.AppScreens
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+    var textSize by rememberSaveable { mutableStateOf("0") }
+    var color by rememberSaveable{ mutableStateOf("0") }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val dataStore = Data(context)
+
 
     var first_name by remember { mutableStateOf("") }
     var last_name by remember { mutableStateOf("") }
@@ -35,23 +44,15 @@ fun RegisterScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val onFirstNameChange = { text: String ->
-        first_name = text
+    LaunchedEffect(scope) {
+        dataStore.getSize.collect { data ->
+            textSize = data.toString()
+        }
     }
-
-    val onLastNameChange = { text: String ->
-        last_name = text
-    }
-
-    val onPhoneChange = { text: String ->
-        phone = text
-    }
-
-    val onEmailChange = { text: String ->
-        email = text
-    }
-    val onPasswordChange = { text: String ->
-        password = text
+    LaunchedEffect(scope) {
+        dataStore.getColor.collect { data ->
+            color = data.toString()
+        }
     }
 
     Box(
@@ -61,7 +62,7 @@ fun RegisterScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(18, 114, 163))
+                .background(color = Color(color.toInt()))
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,7 +92,7 @@ fun RegisterScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp)
-                    .background(Color(18, 114, 163)),
+                    .background(Color(color.toInt())),
                 shape = RoundedCornerShape(24.dp)
             )
             {
@@ -106,8 +107,8 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = first_name,
                         onValueChange = { first_name = it },
-                        label = { Text("Nombres") },
-                        placeholder = { Text("Ingrese sus nombres") },
+                        label = { Text("Nombres",fontSize = textSize.toInt().sp) },
+                        placeholder = { Text("Ingrese sus nombres",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
@@ -122,8 +123,8 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = last_name,
                         onValueChange = { last_name = it },
-                        label = { Text("Apellidos") },
-                        placeholder = { Text("Ingrese sus apellidos") },
+                        label = { Text("Apellidos",fontSize = textSize.toInt().sp) },
+                        placeholder = { Text("Ingrese sus apellidos",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
@@ -138,8 +139,8 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = phone,
                         onValueChange = { phone = it },
-                        label = { Text("Teléfono") },
-                        placeholder = { Text("Ingrese su teléfono") },
+                        label = { Text("Teléfono",fontSize = textSize.toInt().sp) },
+                        placeholder = { Text("Ingrese su teléfono",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -154,8 +155,8 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Correo Electrónico") },
-                        placeholder = { Text(text = "Ingrese su correo electrónico") },
+                        label = { Text("Correo Electrónico",fontSize = textSize.toInt().sp) },
+                        placeholder = { Text(text = "Ingrese su correo electrónico",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -170,8 +171,8 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Contraseña") },
-                        placeholder = { Text(text = "Ingrese su contraseña") },
+                        label = { Text("Contraseña",fontSize = textSize.toInt().sp) },
+                        placeholder = { Text(text = "Ingrese su contraseña",fontSize = textSize.toInt().sp) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -198,13 +199,13 @@ fun RegisterScreen(navController: NavHostController) {
                             ),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.White,
-                            backgroundColor = Color(18, 114, 163)
+                            backgroundColor = Color(color.toInt())
                         )
                     ) {
                         Text(
                             text = "Registrarse",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = textSize.toInt().sp
                         )
                     }
 
@@ -220,7 +221,7 @@ fun RegisterScreen(navController: NavHostController) {
                             modifier = Modifier.clickable {
                                 navController.navigate(AppScreens.LoginScreen.route)
                             },
-                            color = Color(18, 114, 163)
+                            color = Color(color.toInt())
                         )
                     }
 

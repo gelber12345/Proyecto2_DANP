@@ -3,8 +3,7 @@ package com.example.proyecto2.data.animal
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 
 class AnimalRepository(application: Application) {
     var animalDao: AnimalDao
@@ -36,14 +35,25 @@ class AnimalRepository(application: Application) {
         animalDao.deleteAllAnimal()
     }
 ////
-//    fun findAnimal(text: String) {
-//        coroutineScope.launch(Dispatchers.Main) {
-//            searchResults.value = asyncFind(text).await()
-//        }
-//    }
-//
-//    private fun asyncFind(name: String): Deferred<List<Animal>?> =
-//        coroutineScope.async(Dispatchers.IO) {
-//            return@async animalDao.findAnimal(name)
-//        }
+    fun findAnimal(text: String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            searchResults.value = asyncFind(text).await()
+        }
+    }
+
+    private fun asyncFind(name: String): Deferred<List<Animal>?> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async animalDao.findAnimal(name)
+        }
+
+    fun findAnimalBySpecie(text: String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            searchResults.value = asyncFind(text).await()
+        }
+    }
+
+    private fun asyncFindBySpecie(name: String): Deferred<List<Animal>?> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async animalDao.findAnimalbBySpecie(name)
+        }
 }

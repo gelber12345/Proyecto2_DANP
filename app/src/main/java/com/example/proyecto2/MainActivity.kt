@@ -4,14 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.example.proyecto2.Firebase.FirebaseAPI
+import com.example.proyecto2.data.Data
 import com.example.proyecto2.data.animal.AnimalViewModel
 import com.example.proyecto2.navigation.AppNavigation
 import com.example.proyecto2.ui.theme.Proyecto2Theme
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -33,9 +37,28 @@ class MainActivity : ComponentActivity() {
 
             }*/
 
+            var database by rememberSaveable{ mutableStateOf("-1") }
+
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
+            val dataStore = Data(context)
+
+
+
+            LaunchedEffect(scope) {
+                dataStore.getDatabase.collect { data ->
+                    database = data.toString()
+                }
+            }
+            if (database == "0"){
+                db = FirebaseAPI()
+                db.updateData(animalViewModel)
+                LaunchedEffect(scope) {
+                    dataStore.saveDatabase(1)
+                }
+
+            }
             Body(animalViewModel)
-            db = FirebaseAPI()
-            db.updateData(animalViewModel)
         }
     }
 }

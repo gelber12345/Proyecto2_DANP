@@ -1,9 +1,10 @@
 package com.example.proyecto2.data.animal.pagination
 
+import android.util.Log
 import com.example.proyecto2.data.animal.Animal
 import com.example.proyecto2.data.animal.AnimalDao
 
-class PageAnimalService(val totalCount: Int, val pageSize: Int, val viewModel: AnimalDao) {
+class PageAnimalService(val totalCount: Int, val pageSize: Int, val dao: AnimalDao) {
 
     suspend fun getAnimals(page: Int): List<Animal> {
         val startIndex = (page - 1) * pageSize + 1
@@ -14,7 +15,9 @@ class PageAnimalService(val totalCount: Int, val pageSize: Int, val viewModel: A
         }
 
         return (startIndex..endIndex).map { index ->
-            viewModel.findOneAnimal(index)
-        }
+                dao.findOneAnimal(index)
+            }
+
+
     }
 }
