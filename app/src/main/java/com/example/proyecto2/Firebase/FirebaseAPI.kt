@@ -11,7 +11,7 @@ class FirebaseAPI {
     val db = Firebase.firestore
 
     fun updateData(viewModel: AnimalViewModel) {
-        viewModel.deleteAllAnimal()
+       // viewModel.deleteAllAnimal()
 
         db.collection("animales")
             .get()
@@ -36,7 +36,7 @@ class FirebaseAPI {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting documents.", exception)
+                Log.w(ContentValues.TAG, "Error getting registers.", exception)
             }
     }
 

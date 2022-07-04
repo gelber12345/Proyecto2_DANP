@@ -25,7 +25,7 @@ interface AnimalDao {
     @Query("SELECT * FROM animals WHERE id = :id")
     suspend fun findOneAnimal(id: Int): Animal
 //
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAnimal(animal: Animal)
 //
 //    @Update(onConflict = OnConflictStrategy.REPLACE)

@@ -34,15 +34,15 @@ fun AppNavigation(
         }
 
         composable(
-            route = AppScreens.EditAnimalScreen.route,
+            route = AppScreens.ViewDetailsAnimalScreen.route,
         ) {
 
             val result =
                 navController.previousBackStackEntry?.savedStateHandle?.get<Animal>("animal")
             if (result != null) {
-                AnimalEditScreen(navController, result, viewModelAnimal)
+                ViewAnimalDetailsScreen(navController, result, viewModelAnimal)
             } else {
-                AnimalEditScreen(
+                ViewAnimalDetailsScreen(
                     navController,
                     Animal(0, "", "", "", "", "", "", "", "", "", "", ""),
                     viewModelAnimal

@@ -87,7 +87,7 @@ fun FirstMainScreen(
             textSearch = text
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = "Buscar una mascota",
@@ -187,7 +187,7 @@ fun FirstMainScreen(
                     searching = false
 //                    filter = "ave"
 //                    viewModel.findAnimal("%$filter%")
-                    navController.navigate(AppScreens.EditAnimalScreen.route)
+                    navController.navigate(AppScreens.ViewDetailsAnimalScreen.route)
                     navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
                 },
                 shape = RoundedCornerShape(20.dp),
@@ -205,6 +205,35 @@ fun FirstMainScreen(
                         tint = Color.Unspecified
                     )
                     Text("Aves", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Button(
+                colors = buttonColors(
+                    backgroundColor = Color(246, 246, 246),
+                ),
+                onClick = {
+                    searching = false
+//                    filter = "ave"
+//                    viewModel.findAnimal("%$filter%")
+//                    navController.navigate(AppScreens.ViewDetailsAnimalScreen.route)
+//                    navController.previousBackStackEntry?.savedStateHandle?.remove<Animal>("animal")
+                },
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.padding(4.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.all),
+                        contentDescription = "Todos",
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(40.dp),
+                        tint = Color.Unspecified
+                    )
+                    Text("Todos", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -240,7 +269,7 @@ fun AnimalRow(animal: Animal, navController: NavController, viewModel: AnimalVie
 //                .height(120.dp)
                 .clickable {
                     navController.currentBackStackEntry?.savedStateHandle?.set("animal", animal)
-                    navController.navigate(AppScreens.EditAnimalScreen.route)
+                    navController.navigate(AppScreens.ViewDetailsAnimalScreen.route)
                 }
         ) {
             val pathImg: Any
