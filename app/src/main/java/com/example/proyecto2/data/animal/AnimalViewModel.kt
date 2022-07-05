@@ -31,9 +31,7 @@ class AnimalViewModel(appObj: Application) : AndroidViewModel(appObj) {
         }.flow
     }
 
-    fun fetchAllAnimal(): LiveData<List<Animal>> {
-        return animalRepository.readAllDataAnimal
-    }
+
 
     fun insertAnimal(animal: Animal) {
         viewModelScope.launch {
@@ -52,23 +50,4 @@ class AnimalViewModel(appObj: Application) : AndroidViewModel(appObj) {
             animalRepository.findAnimalBySpecie(text)
         }
     }
-//
-//    fun updateAnimal(animal: Animal) {
-//        viewModelScope.launch {
-//            animalRepository.updateAnimal(animal)
-//        }
-//    }
-//
-//    fun deleteAnimalById(id: Int) {
-//        viewModelScope.launch {
-//            animalRepository.deleteAnimalById(id)
-//        }
-//    }
-//
-    fun deleteAllAnimal() {
-        viewModelScope.launch {
-            animalRepository.deleteAllAnimal()
-        }
-    }
-
 }

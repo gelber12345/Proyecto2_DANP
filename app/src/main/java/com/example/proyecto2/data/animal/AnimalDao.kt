@@ -36,13 +36,7 @@ interface AnimalDao {
 //
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAnimal(animal: Animal)
-//
-//    @Update(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun updateAnimal(entity: Animal)
-//
-//    @Query("DELETE FROM animal where id = :id")
-//    suspend fun deleteAnimalById(id: Int)
-//
+
     @Query("DELETE FROM animals")
     suspend fun deleteAllAnimal()
 }

@@ -42,7 +42,6 @@ fun AnimalScreen(
     viewModel: AnimalViewModel
 ) {
     val allAnimals: LazyPagingItems<Animal> = viewModel.animalFlow.collectAsLazyPagingItems()
-    //val allCentros = pageAnimalviewmodel.animalFlow.collectAsLazyPagingItems()
     val searchResults by viewModel.searchResults.observeAsState(listOf())
 
 

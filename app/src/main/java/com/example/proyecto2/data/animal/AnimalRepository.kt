@@ -14,27 +14,11 @@ class AnimalRepository(application: Application) {
         val database = AnimalDb.getDatabase(application)
         animalDao = database.animalDao()
     }
-
-    val readAllDataAnimal: LiveData<List<Animal>> = animalDao.getAllDataAnimal()
-
-
+    
     suspend fun insertAnimal(animal: Animal) {
         animalDao.insertAnimal(animal)
     }
 
-    //
-//    suspend fun updateAnimal(centro: Animal) {
-//        animalDao.updateAnimal(centro)
-//    }
-//
-//    suspend fun deleteAnimalById(id: Int) {
-//        animalDao.deleteAnimalById(id)
-//    }
-//
-    suspend fun deleteAllAnimal() {
-        animalDao.deleteAllAnimal()
-    }
-////
     fun findAnimal(text: String) {
         coroutineScope.launch(Dispatchers.Main) {
             searchResults.value = asyncFind(text).await()
