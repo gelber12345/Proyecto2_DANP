@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.example.proyecto2.data.Data
 import com.example.proyecto2.navigation.AppScreens
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -168,6 +169,13 @@ fun LoginScreen(navController: NavHostController) {
                                             Toast.LENGTH_LONG
                                         )
                                             .show()
+                                        scope.launch {
+                                            dataStore.saveEmail(email)
+
+                                        }
+                                        scope.launch{
+                                            dataStore.savePassword(password)
+                                        }
                                         navController.navigate(AppScreens.AnimalScreen.route)
                                     } else {
                                         Toast.makeText(
