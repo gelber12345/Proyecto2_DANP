@@ -1,5 +1,6 @@
 package com.example.proyecto2.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,14 +26,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto2.data.Data
 import com.example.proyecto2.navigation.AppScreens
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var textSize by rememberSaveable { mutableStateOf("0") }
-    var color by rememberSaveable{ mutableStateOf("0") }
-
+    var color by rememberSaveable { mutableStateOf("0") }
+    val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -112,14 +114,20 @@ fun LoginScreen(navController: NavHostController) {
 
                         onValueChange = { email = it },
                         label = { Text("Correo Electrónico") },
-                        placeholder = { Text(text = "Ingrese su correo electrónico",fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                text = "Ingrese su correo electrónico",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
                                 contentDescription = "emailIcon"
                             )
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(16.dp))
@@ -128,7 +136,12 @@ fun LoginScreen(navController: NavHostController) {
                         value = password,
                         onValueChange = { password = it },
                         label = { Text("Contraseña") },
-                        placeholder = { Text(text = "Ingrese su contraseña",fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                text = "Ingrese su contraseña",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -136,14 +149,43 @@ fun LoginScreen(navController: NavHostController) {
                             )
                         },
                         visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(24.dp))
 
                     Button(
                         onClick = {
-                            navController.navigate(AppScreens.AnimalScreen.route)
+                            db.collection("users")
+                                .whereEqualTo("email", email)
+                                .whereEqualTo("password", password).get()
+                                .addOnSuccessListener { users ->
+                                    if (users.size() != 0) {
+                                        Toast.makeText(
+                                            context,
+                                            "Bienvenido",
+                                            Toast.LENGTH_LONG
+                                        )
+                                            .show()
+                                        navController.navigate(AppScreens.AnimalScreen.route)
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "El usuario no se encuentra registrado.",
+                                            Toast.LENGTH_LONG
+                                        )
+                                            .show()
+                                    }
+                                }
+                                .addOnFailureListener { exception ->
+                                    Toast.makeText(
+                                        context,
+                                        "Error - ${exception}",
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+                                }
                         },
                         shape = RoundedCornerShape(20.dp),
                         elevation = ButtonDefaults.elevation(5.dp),
@@ -155,7 +197,7 @@ fun LoginScreen(navController: NavHostController) {
                             ),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.White,
-                            backgroundColor =Color(color.toInt())
+                            backgroundColor = Color(color.toInt())
                         )
                     ) {
                         Text(
@@ -184,7 +226,9 @@ fun LoginScreen(navController: NavHostController) {
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = "Configuraciones", fontWeight = FontWeight.Bold,fontSize = textSize.toInt().sp,
+                        text = "Configuraciones",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = textSize.toInt().sp,
                         modifier = Modifier.clickable {
                             navController.navigate(AppScreens.ConfigScreen.route)
                         },

@@ -103,12 +103,6 @@ fun FirstMainScreen(
                 ),
                 label = { Text("Buscar") },
                 shape = RoundedCornerShape(32.dp),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "searchIcon"
-                    )
-                },
                 modifier = Modifier.fillMaxWidth().weight(2f),
                 maxLines = 1
             )

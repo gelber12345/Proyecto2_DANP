@@ -15,14 +15,19 @@ import com.example.proyecto2.data.Data
 import com.example.proyecto2.data.animal.AnimalViewModel
 import com.example.proyecto2.navigation.AppNavigation
 import com.example.proyecto2.ui.theme.Proyecto2Theme
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : ComponentActivity() {
     lateinit var db: FirebaseAPI
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
         val animalViewModel = ViewModelProvider(this).get(AnimalViewModel::class.java)
 
         setContent {
@@ -50,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     database = data.toString()
                 }
             }
+
             if (database == "0"){
                 db = FirebaseAPI()
                 db.updateData(animalViewModel)

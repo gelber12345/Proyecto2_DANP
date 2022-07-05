@@ -1,5 +1,6 @@
 package com.example.proyecto2.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,15 +28,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto2.data.Data
 import com.example.proyecto2.navigation.AppScreens
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun RegisterScreen(navController: NavHostController) {
     var textSize by rememberSaveable { mutableStateOf("0") }
-    var color by rememberSaveable{ mutableStateOf("0") }
+    var color by rememberSaveable { mutableStateOf("0") }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val dataStore = Data(context)
-
+    val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     var first_name by remember { mutableStateOf("") }
     var last_name by remember { mutableStateOf("") }
@@ -107,15 +108,21 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = first_name,
                         onValueChange = { first_name = it },
-                        label = { Text("Nombres",fontSize = textSize.toInt().sp) },
-                        placeholder = { Text("Ingrese sus nombres",fontSize = textSize.toInt().sp) },
+                        label = { Text("Nombres", fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                "Ingrese sus nombres",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "firstNameIcon"
                             )
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -123,15 +130,21 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = last_name,
                         onValueChange = { last_name = it },
-                        label = { Text("Apellidos",fontSize = textSize.toInt().sp) },
-                        placeholder = { Text("Ingrese sus apellidos",fontSize = textSize.toInt().sp) },
+                        label = { Text("Apellidos", fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                "Ingrese sus apellidos",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "lastNameIcon"
                             )
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -139,15 +152,21 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = phone,
                         onValueChange = { phone = it },
-                        label = { Text("Teléfono",fontSize = textSize.toInt().sp) },
-                        placeholder = { Text("Ingrese su teléfono",fontSize = textSize.toInt().sp) },
+                        label = { Text("Teléfono", fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                "Ingrese su teléfono",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
                                 contentDescription = "phoneIcon"
                             )
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -155,15 +174,21 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
-                        label = { Text("Correo Electrónico",fontSize = textSize.toInt().sp) },
-                        placeholder = { Text(text = "Ingrese su correo electrónico",fontSize = textSize.toInt().sp) },
+                        label = { Text("Correo Electrónico", fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                text = "Ingrese su correo electrónico",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
                                 contentDescription = "emailIcon"
                             )
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(16.dp))
@@ -171,8 +196,13 @@ fun RegisterScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Contraseña",fontSize = textSize.toInt().sp) },
-                        placeholder = { Text(text = "Ingrese su contraseña",fontSize = textSize.toInt().sp) },
+                        label = { Text("Contraseña", fontSize = textSize.toInt().sp) },
+                        placeholder = {
+                            Text(
+                                text = "Ingrese su contraseña",
+                                fontSize = textSize.toInt().sp
+                            )
+                        },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -180,14 +210,48 @@ fun RegisterScreen(navController: NavHostController) {
                             )
                         },
                         visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(24.dp))
 
                     Button(
                         onClick = {
-                            navController.navigate(AppScreens.LoginScreen.route)
+                            if (first_name == "" || last_name == "" || phone == "" || email == "" || password == "") {
+                                Toast.makeText(
+                                    context,
+                                    "Complete todos los campos.",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            } else {
+                                val data = HashMap<String, String>()
+                                data["name"] = first_name
+                                data["surname"] = last_name
+                                data["phone"] = phone
+                                data["email"] = email
+                                data["password"] = password
+
+                                db.collection("users")
+                                    .add(data)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(
+                                            context,
+                                            "Usuario registrado exitosamente",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        navController.navigate(AppScreens.LoginScreen.route)
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(
+                                            context,
+                                            "ERROR - El usuario no pudo ser registrado",
+                                            Toast.LENGTH_LONG
+                                        )
+                                            .show()
+                                    }
+                            }
                         },
                         shape = RoundedCornerShape(20.dp),
                         elevation = ButtonDefaults.elevation(5.dp),
@@ -224,7 +288,6 @@ fun RegisterScreen(navController: NavHostController) {
                             color = Color(color.toInt())
                         )
                     }
-
                     Spacer(Modifier.height(16.dp))
                 }
             }

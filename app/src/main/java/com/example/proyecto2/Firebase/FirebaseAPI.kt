@@ -36,9 +36,7 @@ class FirebaseAPI {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(ContentValues.TAG, "Error getting registers.", exception)
+                Log.w(ContentValues.TAG, "Error getting registers", exception)
             }
     }
-
-
 }
